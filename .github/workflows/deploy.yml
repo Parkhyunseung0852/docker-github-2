@@ -10,16 +10,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 1. GitHub 저장소 소스코드 가져오기
-    - name: Checkout source code
-      uses: actions/checkout@v4
+      # 1. 소스코드 체크아웃
+      - name: Checkout source code
+        uses: actions/checkout@v4
 
-    # ❌ [삭제됨] azure/login@v2 단계는 XML 게시 프로필과 맞지 않으므로 통째로 지웁니다!
-
-    # 2. Azure App Service에 Docker 컨테이너 빌드 및 배포
-    - name: Deploy to Azure Web App
-      uses: azure/webapps-deploy@v3
-      with:
-        [cite_start]app-name: 'my-cicd-app'
-        [cite_start]publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }} [cite: 37]
-        [cite_start]images: 'node-app:${{ github.sha }}' [cite: 37]
+      # 2. Azure App Service에 빌드 및 배포 수행
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'my-cicd-app'
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          images: 'node-app:${{ github.sha }}'
