@@ -1,0 +1,30 @@
+name: Deploy to Azure Web App with Docker
+
+on:
+  push:
+    branches:
+      - main  # main 브랜치에 push될 때 실행
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. GitHub 저장소 소스코드 가져오기
+    - name: Checkout source code
+      uses: actions/checkout@v4
+
+    # 2. Azure 로그인 (배포 프로필 활용)
+    - name: Log in to Azure
+      uses: azure/login@v2
+      with:
+        creds: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+
+    # 3. Azure App Service에 Docker 컨테이너 바로 빌드 및 배포
+    # (따로 Docker Hub를 쓰지 않고 Azure가 제공하는 빌드 기능을 활용해 원스톱 배포를 수행합니다)
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v3
+      with:
+        app-name: '본인의_Azure_웹앱_이름' # 2단계에서 만든 Azure 웹앱 이름을 적어주세요!
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        images: 'node-app:${{ github.sha }}'
