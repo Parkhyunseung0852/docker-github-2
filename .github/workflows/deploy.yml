@@ -3,7 +3,7 @@ name: Deploy to Azure Web App with Docker
 on:
   push:
     branches:
-      - main  # main 브랜치에 push될 때 실행
+      - main
 
 jobs:
   build-and-deploy:
@@ -14,17 +14,12 @@ jobs:
     - name: Checkout source code
       uses: actions/checkout@v4
 
-    # 2. Azure 로그인 (배포 프로필 활용)
-    - name: Log in to Azure
-      uses: azure/login@v2
-      with:
-        creds: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+    # ❌ [삭제됨] azure/login@v2 단계는 XML 게시 프로필과 맞지 않으므로 통째로 지웁니다!
 
-    # 3. Azure App Service에 Docker 컨테이너 바로 빌드 및 배포
-    # (따로 Docker Hub를 쓰지 않고 Azure가 제공하는 빌드 기능을 활용해 원스톱 배포를 수행합니다)
+    # 2. Azure App Service에 Docker 컨테이너 빌드 및 배포
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v3
       with:
-        app-name: '본인의_Azure_웹앱_이름' # 2단계에서 만든 Azure 웹앱 이름을 적어주세요!
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        images: 'node-app:${{ github.sha }}'
+        [cite_start]app-name: 'my-cicd-app'
+        [cite_start]publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }} [cite: 37]
+        [cite_start]images: 'node-app:${{ github.sha }}' [cite: 37]
